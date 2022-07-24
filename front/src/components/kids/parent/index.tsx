@@ -1,42 +1,43 @@
 import { useEffect, useState } from 'react';
+import { isMetaProperty } from 'typescript';
 import http from '../../../http_common';
-import { ICategoryItem } from './types';
-const CategoryPage = () => {
+import { IParentItem } from './types';
+const ParentPage = () => {
 
-    const [list, setList] = useState<ICategoryItem[]>();
+    const [list, setList] = useState<IParentItem[]>();
 
     const getData = async () => {
-      const { data } = await http.get<ICategoryItem[]>("/api/categories/list");
+      console.log("get parent---");
+      const { data } = await http.get<IParentItem[]>("/");
       setList(data);
+      console.log("data", data);
     };
 
     useEffect(() => {
         //розмонтування визивається один раз
-        return () => {
-          getData();
-        };
+        getData();
     },[]);
 
     const data = list?.map(item => {
         return (
-            <tr>
+            <tr key={item.id}>
               <th scope="row">{item.id}</th>
-              <td>{item.name}</td>
+              <td>{item.firstName}</td>
               <td>
-                <img src={http.getUri()+item.image} width="150" />
+                {item.lastName}
                </td>
             </tr>
         );
     });
     return (
       <>
-        <h1>Категорії</h1>
+        <h1>Батьки</h1>
         <table className="table">
           <thead>
             <tr>
               <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Image</th>
+              <th scope="col">Ім'я</th>
+              <th scope="col">Прізвище</th>
             </tr>
           </thead>
           <tbody>
@@ -47,4 +48,4 @@ const CategoryPage = () => {
     );
 }
 
-export default CategoryPage;
+export default ParentPage;

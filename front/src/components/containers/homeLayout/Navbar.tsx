@@ -29,9 +29,9 @@ const Navbar: React.FC = () => {
                 <Link
                   className="nav-link active"
                   aria-current="page"
-                  to="/category"
+                  to="/parent"
                 >
-                  Категорії
+                  Батьки
                 </Link>
               </li>
             </ul>

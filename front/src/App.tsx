@@ -6,14 +6,14 @@ import HomePage from './components/home';
 import LoginPage from './components/auth/login';
 import RegisterPage from './components/auth/register';
 import HomeLayout from './components/containers/homeLayout';
-import CategoryPage from './components/shop/category';
+import ParentPage from './components/kids/parent';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomeLayout/>}>
         <Route index element={<HomePage/>}/>
-        <Route path="category" element={<CategoryPage/>}/>
+        <Route path="parent" element={<ParentPage/>}/>
         <Route path="login" element={<LoginPage/>}/>
         <Route path="register" element={<RegisterPage/>}/>
       </Route>
