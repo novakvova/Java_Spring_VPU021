@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import http from '../../../http_common';
+import { Link } from 'react-router-dom';
+import http from '../../../../http_common';
 import { IParentItem } from './types';
 const ParentPage = () => {
 
@@ -31,6 +32,7 @@ const ParentPage = () => {
     return (
       <>
         <h1>Батьки</h1>
+        <Link className='btn btn-success' to="/parent/add">Додати</Link>
         <table className="table">
           <thead>
             <tr>
