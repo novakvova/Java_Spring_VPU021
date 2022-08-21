@@ -21,6 +21,9 @@ const ParentPage = () => {
     const data = list?.map(item => {
         return (
             <tr key={item.id}>
+              <td>
+                <img src={http.defaults.baseURL+"\\files\\"+item.image} width="100"/>
+              </td>
               <th scope="row">{item.id}</th>
               <td>{item.firstName}</td>
               <td>
@@ -36,6 +39,7 @@ const ParentPage = () => {
         <table className="table">
           <thead>
             <tr>
+             <th scope="col"></th>
               <th scope="col">Id</th>
               <th scope="col">Ім'я</th>
               <th scope="col">Прізвище</th>
