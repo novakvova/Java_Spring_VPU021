@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { isMetaProperty } from 'typescript';
 import http from '../../../http_common';
 import { IParentItem } from './types';
 const ParentPage = () => {
