@@ -12,7 +12,7 @@ const ParentAddPage: React.FC = () => {
     firstName: "",
     lastName: "",
     phone: "",
-    image: "",
+    imageBase64: "",
     adress: "",
   };
 
@@ -20,17 +20,10 @@ const ParentAddPage: React.FC = () => {
   const [message, setMessage] = useState<string>();
 
   const onHandleSubmit = async (values: IParentAdd) => {
-      const parent = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phone: values.phone,
-        image: values.image,
-        adress: values.adress,
-      };
-      console.log("values :" +values.firstName);
-      console.log(parent);
+
+      console.log(values);
       await http
-        .post<IParentAdd>("/create", parent)
+        .post<IParentAdd>("/create", values)
         .then((response) => {
           console.log("response "+ response);
           navigate("/parent");
@@ -55,47 +48,46 @@ const ParentAddPage: React.FC = () => {
         <h1 className="text-center">Добавити категорію</h1>
         <FormikProvider value={formik}>
           <Form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              hidden
-              className="form-control"
-              id="id"
-              name="id"
-            />
+
             <InputComponent
               inputName="firstName"
               title="Імя"
               touched={touched.firstName}
               errors={errors.firstName}
               handleChange={handleChange}
-            ></InputComponent>
+            />
+
             <InputComponent
               inputName="lastName"
               title="Прізвище"
               touched={touched.lastName}
               errors={errors.lastName}
               handleChange={handleChange}
-            ></InputComponent>
+            />
+
             <InputComponent
               inputName="phone"
               title="Телефон"
               touched={touched.phone}
               errors={errors.phone}
               handleChange={handleChange}
-            ></InputComponent>
+            />
+
             <InputComponent
               inputName="adress"
               title="Адрес"
               touched={touched.adress}
               errors={errors.adress}
               handleChange={handleChange}
-            ></InputComponent>
+            />
+
             <CropperDialog
               onChange={setFieldValue}
-              field="image"
-              error={errors.image}
-              touched={touched.image}
+              field="imageBase64"
+              error={errors.imageBase64}
+              touched={touched.imageBase64}
             />
+            
             <div className="mb-3">
               <button type="submit" className="btn btn-primary">
                 Добавити
