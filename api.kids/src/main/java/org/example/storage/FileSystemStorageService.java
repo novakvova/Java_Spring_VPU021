@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,12 +82,40 @@ public class FileSystemStorageService implements StorageService {
             byte[] bytes = new byte[0];
             bytes = decoder.decode(charArray[1]);
             String directory= rootLocation.toString() +"/"+randomFileName;
+            //byte [] newImage =  this.resizeImage(new ByteArrayInputStream(bytes), 100,100);
             new FileOutputStream(directory).write(bytes);
             return randomFileName;
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new StorageException("Failed to store file ", e);
         }
 
+    }
+
+    private byte[] resizeImage(InputStream uploadedInputStream, int width, int height) {
+
+        try {
+            BufferedImage image = ImageIO.read(uploadedInputStream);
+            Image originalImage= image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+
+            int type = ((image.getType() == 0) ? BufferedImage.TYPE_INT_ARGB : image.getType());
+            BufferedImage resizedImage = new BufferedImage(width, height, type);
+
+            Graphics2D g2d = resizedImage.createGraphics();
+            g2d.drawImage(originalImage, 0, 0, width, height, null);
+            g2d.dispose();
+            g2d.setComposite(AlphaComposite.Src);
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            ImageIO.write(resizedImage, "png", byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            // Something is going wrong while resizing image
+            return null;
+        }
     }
 
     @Override
