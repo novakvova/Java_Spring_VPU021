@@ -30,14 +30,14 @@ const CropperDialog: React.FC<ICropperDialog> = ({
     if (files && files.length) {
       const file = files[0];
       if (/^image\/\w+/.test(file.type)) {
-        console.log("----", file);
+        //console.log("----", file);
         const fileType=file.type;
         if(fileType==='image/png')
           setUploadedImageType(file.type);
         else
           setUploadedImageType('image/jpeg');
         const url = URL.createObjectURL(file);
-        console.log("select image", url);
+        //console.log("select image", url);
         await setShow((prev)=> !prev);
         await setImage(url);
         cropperObj?.replace(url);
@@ -67,7 +67,7 @@ const CropperDialog: React.FC<ICropperDialog> = ({
 
   const handleCroppedImage = () => {
     const base64 = cropperObj?.getCroppedCanvas().toDataURL(uploadedImageType) as string;
-    console.log("base64", base64);
+    //console.log("base64", base64);
     setCurrentImage(base64);
     toggleModal();
     onChange(field, base64);

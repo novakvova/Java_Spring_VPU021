@@ -7,10 +7,10 @@ const ParentPage = () => {
     const [list, setList] = useState<IParentItem[]>();
 
     const getData = async () => {
-      console.log("get parent---");
+      //console.log("get parent---");
       const { data } = await http.get<IParentItem[]>("/");
-      setList(data);
-      console.log("data", data);
+      await setList(data);
+      //console.log("data", data);
     };
 
     useEffect(() => {
