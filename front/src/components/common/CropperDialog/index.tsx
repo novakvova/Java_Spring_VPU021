@@ -25,8 +25,8 @@ const CropperDialog: React.FC<ICropperDialog> = ({
   const imgPrevRef = useRef<HTMLImageElement>(); //попередній перегляд фото
   const [cropperObj, setCropperObj] = useState<Cropper>();
 
-  const handleSelectImage = async (e: React.FormEvent<HTMLInputElement>) => {
-    let files = (e.currentTarget.files as FileList);
+  const handleSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    let files = (e.target.files as FileList);
     if (files && files.length) {
       const file = files[0];
       if (/^image\/\w+/.test(file.type)) {
@@ -46,7 +46,7 @@ const CropperDialog: React.FC<ICropperDialog> = ({
       }
     }
 
-    e.currentTarget.value=""; //обнуляємо значення
+    e.target.value=""; //обнуляємо значення
   }
 
   const toggleModal = () => {
