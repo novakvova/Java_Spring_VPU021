@@ -76,18 +76,31 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException("Failed to store empty base64 ");
             }
             UUID uuid = UUID.randomUUID();
-            String randomFileName = uuid.toString()+".jpg";
+
             String [] charArray = base64.split(",");
+            String extension;
+            System.out.println("-----------------"+ charArray[0]);
+            switch (charArray[0]) {//check image's extension
+                case "data:image/png;base64":
+                    extension = "png";
+                    break;
+                default://should write cases for more images types
+                    extension = "jpg";
+                    break;
+            }
+
+            String randomFileName = uuid.toString()+"."+extension;
             java.util.Base64.Decoder decoder = Base64.getDecoder();
             byte[] bytes = new byte[0];
             bytes = decoder.decode(charArray[1]);
             String directory= rootLocation.toString() +"/"+randomFileName;
 // My Example
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-            BufferedImage newImg = ImageUtils.resizeImage(image, ImageUtils.IMAGE_PNG, 1200,1200);
+            BufferedImage newImg = ImageUtils.resizeImage(image,
+                    extension=="jpg"? ImageUtils.IMAGE_JPEG : ImageUtils.IMAGE_PNG, 600,600);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-            ImageIO.write(newImg, "png", byteArrayOutputStream);
+            ImageIO.write(newImg, extension, byteArrayOutputStream);
             bytes = byteArrayOutputStream.toByteArray();
             new FileOutputStream(directory).write(bytes);
             return randomFileName;
