@@ -84,10 +84,10 @@ public class FileSystemStorageService implements StorageService {
             String directory= rootLocation.toString() +"/"+randomFileName;
 // My Example
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-            BufferedImage newImg = ImageUtils.resizeImage(image, ImageUtils.IMAGE_JPEG, 1200,1200);
+            BufferedImage newImg = ImageUtils.resizeImage(image, ImageUtils.IMAGE_PNG, 1200,1200);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-            ImageIO.write(newImg, "jpg", byteArrayOutputStream);
+            ImageIO.write(newImg, "png", byteArrayOutputStream);
             bytes = byteArrayOutputStream.toByteArray();
             new FileOutputStream(directory).write(bytes);
             return randomFileName;

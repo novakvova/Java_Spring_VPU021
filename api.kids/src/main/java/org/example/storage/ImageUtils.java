@@ -162,7 +162,7 @@ public class ImageUtils
      */
     public static BufferedImage createHeadlessBufferedImage(BufferedImage image, int type, int width, int height)
     {
-        if (type == ImageUtils.IMAGE_PNG && hasAlpha(image)) {
+        if (type == ImageUtils.IMAGE_PNG) { // && hasAlpha(image)) {
             type = BufferedImage.TYPE_INT_ARGB;
         }
         else {
