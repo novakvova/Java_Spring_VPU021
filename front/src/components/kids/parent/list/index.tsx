@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import http from '../../../../http_common';
-import { IParentItem } from './types';
 import { useTypedSelector } from "../../../../hooks/useTypedSelector";
 import { useActions } from "../../../../hooks/useActions";
+import EclipseWidget from "../../../common/eclipse";
 
 const ParentPage = () => {
-
-    //const [list, setList] = useState<IParentItem[]>();
-
-    const { list } = useTypedSelector((store) => store.parent);
+    const { list, loading } = useTypedSelector((store) => store.parent);
     const { getParents } = useActions();
 
     const getData = async () => {
-      //loading begin
       await getParents();
-      //loading end
     };
 
     useEffect(() => {
@@ -54,6 +49,7 @@ const ParentPage = () => {
             {data}
           </tbody>
         </table>
+        {loading && <EclipseWidget />}
       </>
     );
 }

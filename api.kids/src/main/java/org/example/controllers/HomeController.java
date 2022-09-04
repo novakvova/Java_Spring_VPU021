@@ -27,18 +27,20 @@ public class HomeController {
     private final StorageService storageService;
     private final ParentRepository parentRepository;
     @GetMapping("/")
-    public List<ParentItemDto> index() {
+    public List<ParentItemDto> index() throws InterruptedException {
+        //Thread.sleep(2000);
         List<ParentItemDto> items =  mapper.parentsToParentsAllDto(parentRepository.findAll());
         return items;
     }
 
     @PostMapping("/create")
-    public String add(@RequestBody ParentAddDto parentAddDto) {
+    public ParentItemDto add(@RequestBody ParentAddDto parentAddDto) throws InterruptedException {
+        Thread.sleep(3000);
         Parent parent = mapper.ParentByParentAddDto(parentAddDto);
         String fileName = storageService.store(parentAddDto.getImageBase64());
         parent.setImage(fileName);
         parentRepository.save(parent);
-        return fileName;
+        return mapper.parentToParentItemDto(parent);
     }
 
     @DeleteMapping("/remove/{id}")

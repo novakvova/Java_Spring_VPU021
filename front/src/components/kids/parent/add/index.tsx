@@ -4,8 +4,10 @@ import InputComponent from "../../../common/InputComponent";
 import { ParentAddSchema } from "./validataion";
 import { IParentAdd } from "./types";
 import CropperDialog from "../../../common/CropperDialog";
-import http from "../../../../http_common";
 import { useNavigate } from "react-router-dom";
+import { useActions } from "../../../../hooks/useActions";
+import { useTypedSelector } from "../../../../hooks/useTypedSelector";
+import EclipseWidget from "../../../common/eclipse";
 
 const ParentAddPage: React.FC = () => {
   const initialValues: IParentAdd = {
@@ -16,22 +18,20 @@ const ParentAddPage: React.FC = () => {
     adress: "",
   };
 
+  const { loading } = useTypedSelector((store) => store.parent);
+
+  const { createParent } = useActions();
+
   const navigate = useNavigate();
   const [message, setMessage] = useState<string>();
 
   const onHandleSubmit = async (values: IParentAdd) => {
-
-      console.log(values);
-      await http
-        .post<IParentAdd>("/create", values)
-        .then((response) => {
-          console.log("response "+ response);
-          navigate("/parent");
-        })
-        .catch((error) => {
-          setMessage(error.message);
-        });
-    
+    try {
+      await createParent(values);
+      navigate("/parent");
+    } catch (ex: any) {
+      setMessage(ex.message);
+    }
   };
 
   const formik = useFormik({
@@ -43,6 +43,7 @@ const ParentAddPage: React.FC = () => {
     const { errors, touched, handleSubmit, handleChange, setFieldValue } = formik;
   return (
     <>
+      {loading && <EclipseWidget />}
       <div className="row">
       <div className="offset-md-3 col-md-6">
         <h1 className="text-center">Добавити категорію</h1>
