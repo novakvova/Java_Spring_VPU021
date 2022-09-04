@@ -132,4 +132,14 @@ public class FileSystemStorageService implements StorageService {
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
+
+    @Override
+    public  void  removeFile(String removeFile){
+        Path filePath = load(removeFile);
+        File file = new File(filePath.toString());
+        if(file.delete()){
+            System.out.println(removeFile + " Файл видалено.");
+        }else System.out.println(removeFile + " Файл не знайдено.");
+
+    }
 }

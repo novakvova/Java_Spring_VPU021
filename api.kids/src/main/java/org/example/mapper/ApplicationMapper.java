@@ -2,6 +2,7 @@ package org.example.mapper;
 
 import org.example.dto.parentdto.ParentAddDto;
 import org.example.dto.parentdto.ParentItemDto;
+import org.example.dto.parentdto.ParentUpdateDto;
 import org.example.entities.Parent;
 import org.mapstruct.Mapper;
 
@@ -12,4 +13,6 @@ public interface ApplicationMapper {
     Parent ParentByParentAddDto(ParentAddDto dto);
     ParentItemDto parentToParentItemDto(Parent Parent);
     List<ParentItemDto> parentsToParentsAllDto(List<Parent> parents);
+
+    Parent ParentUpdateDtoByParent(ParentUpdateDto dto);
 }

@@ -3,6 +3,7 @@ package org.example.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.parentdto.ParentAddDto;
 import org.example.dto.parentdto.ParentItemDto;
+import org.example.dto.parentdto.ParentUpdateDto;
 import org.example.entities.Parent;
 import org.example.mapper.ApplicationMapper;
 import org.example.repositories.ParentRepository;
@@ -16,6 +17,7 @@ import org.springframework.core.io.Resource;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +40,31 @@ public class HomeController {
         parentRepository.save(parent);
         return fileName;
     }
+
+    @DeleteMapping("/remove/{id}")
+    public int deleteParent(@PathVariable int id) {
+        Parent p = parentRepository.findById(id).get();
+        parentRepository.deleteById(id);
+        storageService.removeFile(p.getImage());
+        return 0;
+    }
+
+    @PutMapping("/update")
+    public int updateParent(@RequestBody ParentUpdateDto dto) {
+        Parent parent = parentRepository.findById(dto.getId()).get();
+        Parent update = mapper.ParentUpdateDtoByParent(dto);
+        update.setImage(parent.getImage());
+        String imgBase64 = dto.getImageBase64();
+        if(imgBase64 != null && !imgBase64.isEmpty())
+        {
+            storageService.removeFile(parent.getImage());
+            String fileName = storageService.store(dto.getImageBase64());
+            update.setImage(fileName);
+        }
+        parentRepository.save(update);
+        return 0;
+    }
+
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws Exception {
