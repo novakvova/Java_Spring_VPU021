@@ -1,8 +1,10 @@
 import { authReducer } from './../components/auth/store/reducer';
+import { parentReducer } from '../components/kids/parent/store/reducer';
 import { combineReducers } from "redux";
 
 export const rootReducer = combineReducers({
-    auth : authReducer
+    auth: authReducer,
+    parent: parentReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
