@@ -18,7 +18,7 @@ import static java.lang.String.format;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenUtil {
-    private final String jwtSecret = "zdtlDes873KjjuwodkLDPDplk3JKyy*did5sseII6m6wTTgsNFhqzjqP";
+    private final String jwtSecret = "zdtlDeos873KjjuwodkLDPDplk3JKyy*did5sseII6m6wTTgsNFhqzjqP";
     private final String jwtIssuer = "step.io";
 
     public String generateAccessToken(UserEntity user) {
@@ -28,7 +28,7 @@ public class JwtTokenUtil {
                 //.claim("roles", user.getUsername())
                 .setIssuer(jwtIssuer)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 1 week
+                .setExpiration(new Date(System.currentTimeMillis() + /*7 * 24 * 60 */ 60 * 1000)) // 1 week
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
