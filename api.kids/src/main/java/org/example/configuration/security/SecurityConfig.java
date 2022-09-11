@@ -1,5 +1,6 @@
 package org.example.configuration.security;
 
+import org.example.constants.Roles;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +12,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -26,6 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+    private final JwtTokenFilter jwtTokenFilter;
+
+    public SecurityConfig(
+            JwtTokenFilter jwtTokenFilter) {
+        super();
+        this.jwtTokenFilter = jwtTokenFilter;
+        // Inherit security context in async function calls
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+    }
 
     @Value("${springdoc.api-docs.path}")
     private String restApiDocPath;
@@ -65,13 +78,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Set permissions on endpoints
         http.authorizeRequests()
                 // Swagger endpoints must be publicly accessible
-                .antMatchers("/**").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/static/**").permitAll() //.hasAuthority(Roles.Admin)
-                .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/api/account/**").permitAll()
                 .antMatchers(String.format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(String.format("%s/**", swaggerPath)).permitAll()
                 .anyRequest().authenticated();
+        // Add JWT token filter
 
+
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
     // Expose authentication manager bean
     @Override @Bean
