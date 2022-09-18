@@ -5,7 +5,7 @@ import { IRegister } from "./types";
 import { RegisterSchema } from "./validataion";
 import CropperDialog from "../../common/CropperDialog";
 import { useDispatch } from "react-redux";
-import { AuthActionTypes } from "../store/types";
+import { AuthActionTypes } from "../login/types";
 
 const RegisterPage: React.FC = () => {
   const initialValues: IRegister = {

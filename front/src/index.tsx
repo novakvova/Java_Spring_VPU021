@@ -8,10 +8,17 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { setAuthUserByToken } from './components/auth/login/actions';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+let token = localStorage.token;
+if (token && token != 'undefined') {
+  setAuthUserByToken(token, store.dispatch);
+}
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>
