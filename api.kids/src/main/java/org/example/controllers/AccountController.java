@@ -86,8 +86,6 @@ public class AccountController {
 
 
 
-
-
     private UserView loginUser(String username, String password) throws BadCredentialsException {
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
