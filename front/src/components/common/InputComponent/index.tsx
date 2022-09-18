@@ -4,6 +4,8 @@ import { IInput } from "./types";
 
 const InputComponent: React.FC<IInput> = ({
   inputName,
+  inputType="text",
+  autocomplete="off",
   title,
   errors,
   touched,
@@ -17,12 +19,13 @@ const InputComponent: React.FC<IInput> = ({
       {title}
       </label>
       <input
-        type= {inputName}
+        type= {inputType}
         className={classNames(
           "form-control",
           { "is-invalid": touched && errors },
           { "is-valid": touched && !errors }
         )}
+        autoComplete={autocomplete}
         name={inputName}
         id={inputName}
         onChange={handleChange}

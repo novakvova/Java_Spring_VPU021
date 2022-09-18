@@ -1,6 +1,8 @@
 package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.configuration.captcha.CaptchaSettings;
+import org.example.configuration.captcha.GoogleResponse;
 import org.example.configuration.security.JwtTokenUtil;
 import org.example.constants.Roles;
 import org.example.dto.account.LoginView;
@@ -16,6 +18,7 @@ import org.example.repositories.ParentRepository;
 import org.example.repositories.RoleRepository;
 import org.example.repositories.UserRepository;
 import org.example.storage.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestOperations;
 
 import javax.validation.Valid;
 import java.net.URLEncoder;
@@ -47,6 +51,11 @@ public class AccountController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    private final CaptchaSettings captchaSettings;
+    @Autowired
+    private final RestOperations restTemplate;
+    protected static final String RECAPTCHA_URL_TEMPLATE = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
+
     @PostMapping("login")
     public ResponseEntity<UserView> login(@RequestBody @Valid LoginView request) {
         try {
@@ -61,6 +70,21 @@ public class AccountController {
     @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterView request) {
         try {
+
+            String url = String.format(RECAPTCHA_URL_TEMPLATE, captchaSettings.getSicretkey(), request.getRecaptchaToken());
+            try {
+                final GoogleResponse googleResponse = restTemplate.getForObject(url, GoogleResponse.class);
+                if (!googleResponse.isSuccess()) {
+                    throw new Exception("reCaptcha was not successfully validated");
+                }
+            }
+            catch (Exception rce) {
+                String str = rce.getMessage();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+
+
             UserEntity userdb =  userRepository.findByEmail(request.getEmail());
             if(userdb!=null)
             {
@@ -83,8 +107,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
-
 
     private UserView loginUser(String username, String password) throws BadCredentialsException {
         Authentication authenticate = authenticationManager

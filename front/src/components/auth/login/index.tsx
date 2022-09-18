@@ -69,6 +69,7 @@ import {
   
                 <InputComponent
                   title="Email"
+                  inputType="email"
                   inputName="email"
                   errors={errors.email}
                   touched={touched.email}
@@ -77,6 +78,7 @@ import {
   
                 <InputComponent
                   title="Пароль"
+                  inputType="password"
                   inputName="password"
                   errors={errors.password}
                   touched={touched.password}

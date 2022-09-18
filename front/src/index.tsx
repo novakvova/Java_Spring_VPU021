@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 );
 
 let token = localStorage.token;
-if (token && token != 'undefined') {
+if (token) {
   setAuthUserByToken(token, store.dispatch);
 }
 
